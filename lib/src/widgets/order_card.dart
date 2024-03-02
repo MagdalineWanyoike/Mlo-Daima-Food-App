@@ -20,12 +20,13 @@ class _OrderCardState extends State<OrderCard> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               width: 45.0,
-              height: 73.0,
+              height: 78.0,
               child: Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 10.0,
                 ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     InkWell(
                         onTap: () {},

@@ -11,8 +11,8 @@ class UserModel extends Model {
   List<User> _users = [];
   List<UserInfo> _userInfos = [];
 
-  User _authenticatedUser;
-  UserInfo _authenticatedUserInfo;
+  User? _authenticatedUser;
+  UserInfo? _authenticatedUserInfo;
 
   bool _isLoading = false;
 
@@ -25,11 +25,11 @@ class UserModel extends Model {
   }
 
   User get authtenticatedUser {
-    return _authenticatedUser;
+    return _authenticatedUser!;
   }
 
   UserInfo get authtenticatedUserInfo {
-    return _authenticatedUserInfo;
+    return _authenticatedUserInfo!;
   }
 
   bool get isLoading {
@@ -41,8 +41,8 @@ class UserModel extends Model {
     notifyListeners();
 
     try {
-      final http.Response response = await http
-          .get("https://flutter-food-a2151.firebaseio.com/users.json");
+      final http.Response response = await http.get(
+          Uri.https("https://flutter-food-a2151.firebaseio.com/users.json"));
 
       // print("Fecthing data: ${response.body}");
       final Map<String, dynamic> fetchedData = json.decode(response.body);
@@ -56,6 +56,9 @@ class UserModel extends Model {
           userType: userInfoData['userType'],
           userId: userInfoData['localId'],
           username: userInfoData['username'],
+          firstName: '',
+          lastName: '',
+          phoneNumber: '',
         );
 
         userInfos.add(userInfo);
@@ -79,7 +82,7 @@ class UserModel extends Model {
 
     try {
       final http.Response response = await http.post(
-          "https://flutter-food-a2151.firebaseio.com/users.json",
+          Uri.parse("https://flutter-food-a2151.firebaseio.com/users.json"),
           body: json.encode(userInfo));
 
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -88,6 +91,11 @@ class UserModel extends Model {
         id: responseData['name'],
         email: userInfo['email'],
         username: userInfo['username'],
+        userId: '',
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        userType: '',
       );
 
       _userInfos.add(userInfoWithID);
@@ -104,7 +112,7 @@ class UserModel extends Model {
   Future<UserInfo> getUserInfo(String userId) async {
     final bool response = await fetchUserInfos();
     print("The response: $response");
-    UserInfo foundUserInfo;
+    late UserInfo foundUserInfo;
 
     print("the user Infos: $_userInfos");
     if (response) {
@@ -122,7 +130,7 @@ class UserModel extends Model {
 
   UserInfo getUserDetails(String userId) {
     fetchUserInfos();
-    UserInfo foundUserInfo;
+    late UserInfo foundUserInfo;
 
     for (int i = 0; i < _userInfos.length; i++) {
       if (_userInfos[i].userId == userId) {
@@ -135,7 +143,7 @@ class UserModel extends Model {
 
   Future<Map<String, dynamic>> authenticate(String email, String password,
       {AuthMode authMode = AuthMode.SignIn,
-      Map<String, dynamic> userInfo}) async {
+      Map<String, dynamic>? userInfo}) async {
     _isLoading = true;
     notifyListeners();
 
@@ -145,20 +153,21 @@ class UserModel extends Model {
       "returnSecureToken": true,
     };
 
-    String message;
+    String? message;
     bool hasError = false;
-
+    http.Response response = http.Response('', 200);
     try {
-      http.Response response;
       if (authMode == AuthMode.SignUp) {
         response = await http.post(
-          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA62Y14Eu3iCTYBYZVFi4pNPXjL702baOI",
+          Uri.parse(
+              "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA62Y14Eu3iCTYBYZVFi4pNPXjL702baOI"),
           body: json.encode(authData),
           headers: {'Content-Type': 'application/json'},
         );
       } else if (authMode == AuthMode.SignIn) {
         response = await http.post(
-          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA62Y14Eu3iCTYBYZVFi4pNPXjL702baOI",
+          Uri.parse(
+              "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA62Y14Eu3iCTYBYZVFi4pNPXjL702baOI"),
           body: json.encode(authData),
           headers: {'Content-Type': 'application/json'},
         );
@@ -177,13 +186,13 @@ class UserModel extends Model {
         if (authMode == AuthMode.SignIn) {
           _authenticatedUserInfo = await getUserInfo(responseBody['localId']);
 
-          prefs.setString("username", _authenticatedUserInfo.username);
-          prefs.setString("email", _authenticatedUserInfo.email);
-          prefs.setString("userType", _authenticatedUserInfo.userType);
+          prefs.setString("username", _authenticatedUserInfo!.username);
+          prefs.setString("email", _authenticatedUserInfo!.email);
+          prefs.setString("userType", _authenticatedUserInfo!.userType);
 
           message = "Sign in successfully";
         } else if (authMode == AuthMode.SignUp) {
-          userInfo['localId'] = responseBody['localId'];
+          userInfo!['localId'] = responseBody['localId'];
           addUserInfo(userInfo);
           prefs.setString("username", userInfo['username']);
           prefs.setString("email", userInfo['email']);
@@ -224,7 +233,7 @@ class UserModel extends Model {
 
   void autoLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("token");
+    String? token = prefs.getString("token");
 
     if (token != null) {
       _authenticatedUser = null;

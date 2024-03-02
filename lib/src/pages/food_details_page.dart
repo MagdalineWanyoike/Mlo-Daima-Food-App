@@ -7,7 +7,7 @@ class FoodDetailsPage extends StatelessWidget {
   final Food food;
 
   FoodDetailsPage({
-    this.food,
+    required this.food,
   });
   
   var _mediumSpace = SizedBox(

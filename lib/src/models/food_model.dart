@@ -1,4 +1,4 @@
-class Food{
+class Food {
   final String id;
   final String name;
   final String imagePath;
@@ -7,15 +7,14 @@ class Food{
   final double price;
   final double discount;
   final double ratings;
-
   Food({
-    this.id,
-    this.name,
-    this.imagePath,
-    this.description,
-    this.category,
-    this.price,
-    this.discount,
-    this.ratings
+    required this.id,
+    required this.name,
+    required this.imagePath,
+    required this.description,
+    required this.category,
+    required this.price,
+    required this.discount,
+    required this.ratings,
   });
 }

@@ -6,7 +6,7 @@ class FoodCard extends StatelessWidget{
   final String imagePath;
   final int numberOfItems;
 
-  FoodCard({this.categoryName, this.imagePath, this.numberOfItems});
+  FoodCard({required this.categoryName, required this.imagePath, required this.numberOfItems});
 
   @override
   Widget build(BuildContext context){
