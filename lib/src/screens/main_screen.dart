@@ -11,7 +11,7 @@ import '../pages/profile_page.dart';
 class MainScreen extends StatefulWidget {
   final MainModel model;
 
-  MainScreen({this.model});
+  MainScreen({required this.model});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -21,13 +21,13 @@ class _MainScreenState extends State<MainScreen> {
   int currentTab = 0;
 
   // Pages
-  HomePage homePage;
-  OrderPage orderPage;
-  FavoritePage favoritePage;
-  ProfilePage profilePage;
+  late HomePage homePage;
+ late OrderPage orderPage;
+ late FavoritePage favoritePage;
+ late ProfilePage profilePage;
 
-  List<Widget> pages;
-  Widget currentPage;
+  List<Widget>? pages;
+  late Widget currentPage;
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
                 onPressed: () {}),
             currentTab == 3
                 ? ScopedModelDescendant(builder:
-                    (BuildContext context, Widget child, MainModel model) {
+                    (context, child, MainModel model) {
                     return IconButton(
                       icon: Icon(
                         Icons.logout,
@@ -84,7 +84,7 @@ class _MainScreenState extends State<MainScreen> {
                       onPressed: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (BuildContext context) => SignInPage()));
-                        model.logout();
+                        model.userModel.logout();
                       },
                     );
                   })
@@ -100,8 +100,8 @@ class _MainScreenState extends State<MainScreen> {
               ListTile(
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => AddFoodItem()));
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (BuildContext context) => AddFoodItem(food: null,)));
                 },
                 leading: Icon(Icons.list),
                 title: Text(
@@ -112,13 +112,13 @@ class _MainScreenState extends State<MainScreen> {
             ],
           ),
         ),
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentTab,
           onTap: (index) {
             setState(() {
               currentTab = index;
-              currentPage = pages[index];
+              currentPage = pages![index];
             });
           },
           type: BottomNavigationBarType.fixed,
@@ -127,25 +127,25 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(
                 Icons.home,
               ),
-              title: Text("Home"),
+              label: ("Home"),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.explore,
               ),
-              title: Text("Explore"),
+              label: ("Explore"),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.shopping_cart,
               ),
-              title: Text("Orders"),
+              label: ("Orders"),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
               ),
-              title: Text("Profile"),
+              label: ("Profile"),
             ),
           ],
         ),

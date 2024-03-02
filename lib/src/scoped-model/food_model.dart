@@ -33,7 +33,7 @@ class FoodModel extends Model {
         "discount": food.discount,
       };
       final http.Response response = await http.post(
-          "https://flutter-food-a2151.firebaseio.com/foods.json",
+          Uri.https("https://flutter-food-a2151.firebaseio.com/foods.json"),
           body: json.encode(foodData));
 
       final Map<String, dynamic> responeData = json.decode(response.body);
@@ -45,6 +45,8 @@ class FoodModel extends Model {
         category: food.category,
         discount: food.discount,
         price: food.price,
+        imagePath: '',
+        ratings: 5,
       );
 
       _foods.add(foodWithID);
@@ -65,8 +67,8 @@ class FoodModel extends Model {
     notifyListeners();
 
     try {
-      final http.Response response = await http
-          .get("https://flutter-food-a2151.firebaseio.com/foods.json");
+      final http.Response response = await http.get(
+          Uri.https("https://flutter-food-a2151.firebaseio.com/foods.json"));
 
       // print("Fecthing data: ${response.body}");
       final Map<String, dynamic> fetchedData = json.decode(response.body);
@@ -82,6 +84,8 @@ class FoodModel extends Model {
           category: foodData["category"],
           price: double.parse(foodData["price"].toString()),
           discount: double.parse(foodData["discount"].toString()),
+          imagePath: '',
+          ratings: 8,
         );
 
         foodItems.add(foodItem);
@@ -110,7 +114,8 @@ class FoodModel extends Model {
     int foodIndex = _foods.indexOf(theFood);
     try {
       await http.put(
-          "https://flutter-food-a2151.firebaseio.com/foods/${foodId}.json",
+          Uri.https(
+              "https://flutter-food-a2151.firebaseio.com/foods/${foodId}.json"),
           body: json.encode(foodData));
 
       Food updateFoodItem = Food(
@@ -120,6 +125,8 @@ class FoodModel extends Model {
         discount: foodData['discount'],
         price: foodData['price'],
         description: foodData['description'],
+        imagePath: '',
+        ratings: 8,
       );
 
       _foods[foodIndex] = updateFoodItem;
@@ -139,8 +146,8 @@ class FoodModel extends Model {
     notifyListeners();
 
     try {
-      final http.Response response = await http.delete(
-          "https://flutter-food-a2151.firebaseio.com/foods/${foodId}.json");
+      final http.Response response = await http.delete(Uri.https(
+          "https://flutter-food-a2151.firebaseio.com/foods/${foodId}.json"));
 
       // delete item from the list of food items
       _foods.removeWhere((Food food) => food.id == foodId);
@@ -156,7 +163,7 @@ class FoodModel extends Model {
   }
 
   Food getFoodItemById(String foodId) {
-    Food food;
+    late Food food;
     for (int i = 0; i < _foods.length; i++) {
       if (_foods[i].id == foodId) {
         food = _foods[i];

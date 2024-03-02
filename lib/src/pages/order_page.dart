@@ -11,8 +11,10 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: ListView(
+        shrinkWrap: true,
         padding: EdgeInsets.symmetric(horizontal: 10.0),
         scrollDirection: Axis.vertical,
         children: <Widget>[
@@ -26,12 +28,13 @@ class _OrderPageState extends State<OrderPage> {
 
   Widget _buildTotalContainer() {
     return Container(
-      height: 220.0,
+      height: 234.0,
       padding: EdgeInsets.only(
         left: 10.0,
         right: 10.0,
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Row(
             mainAxisSize: MainAxisSize.max,

@@ -9,7 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 class FavoritePage extends StatefulWidget {
   final MainModel model;
 
-  FavoritePage({this.model});
+  FavoritePage({required this.model});
   @override
   _FavoritePageState createState() => _FavoritePageState();
 }
@@ -23,7 +23,7 @@ class _FavoritePageState extends State<FavoritePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.model.fetchFoods();
+    widget.model.foodModel.fetchFoods();
   }
 
   @override
@@ -32,22 +32,22 @@ class _FavoritePageState extends State<FavoritePage> {
       key: _explorePageScaffoldKey,
       backgroundColor: Colors.white,
       body: ScopedModelDescendant<MainModel>(
-        builder: (BuildContext sctx, Widget child, MainModel model) {
+        builder: (sctx, child, MainModel model) {
           //model.fetchFoods(); // this will fetch and notifylisteners()
           // List<Food> foods = model.foods;
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: RefreshIndicator(
-              onRefresh: model.fetchFoods,
+              onRefresh: model.foodModel.fetchFoods,
               child: ListView.builder(
-                itemCount: model.foodLength,
+                itemCount: model.foodModel.foodLength,
                 itemBuilder: (BuildContext lctx, int index) {
                   return GestureDetector(
                     onTap: () async {
                       final bool response =
                           await Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) => AddFoodItem(
-                                    food: model.foods[index],
+                                    food: model.foodModel.foods[index],
                                   )));
 
                       if (response) {
@@ -60,20 +60,20 @@ class _FavoritePageState extends State<FavoritePage> {
                                 TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
                         );
-                        _explorePageScaffoldKey.currentState.showSnackBar(snackBar);
+                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
                     onDoubleTap: (){
                       // delete food item
                       showLoadingIndicator(context, "Deleting food item...");
-                      model.deleteFood(model.foods[index].id).then((bool response){
+                      model.foodModel.deleteFood(model.foodModel.foods[index].id).then((bool response){
                         Navigator.of(context).pop();
                       });
                     },
                     child: FoodItemCard(
-                      model.foods[index].name,
-                      model.foods[index].description,
-                      model.foods[index].price.toString(),
+                      model.foodModel.foods[index].name,
+                      model.foodModel.foods[index].description,
+                      model.foodModel.foods[index].price.toString(),
                     ),
                   );
                 },

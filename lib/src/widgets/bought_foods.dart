@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 class BoughtFood extends StatefulWidget {
@@ -9,14 +10,9 @@ class BoughtFood extends StatefulWidget {
   final double discount;
   final double ratings;
 
-  BoughtFood(
-      {this.id,
-      this.name,
-      this.imagePath,
-      this.category,
-      this.price,
-      this.discount,
-      this.ratings});
+  const BoughtFood({super.key, required this.id, required this.name, required this.imagePath, required this.category, required this.price, required this.discount, required this.ratings});
+
+
 
   @override
   _BoughtFoodState createState() => _BoughtFoodState();

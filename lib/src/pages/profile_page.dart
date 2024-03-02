@@ -17,8 +17,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        UserInfo userInfo = model.getUserDetails(model.authtenticatedUser.id);
+      builder: (context, child, MainModel model) {
+        UserInfo userInfo = model.userModel.getUserDetails(model.userModel.authtenticatedUser.id);
 
         return Scaffold(
           backgroundColor: Colors.white,

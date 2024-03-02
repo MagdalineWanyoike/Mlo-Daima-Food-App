@@ -71,9 +71,9 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: 20.0),
           ScopedModelDescendant<MainModel>(
-            builder: (BuildContext context, Widget child, MainModel model) {
+            builder: ( context,  child, MainModel model) {
               return Column(
-                children: model.foods.map(_buildFoodItems).toList(),
+                children: model.foodModel.foods.map(_buildFoodItems).toList(),
               );
             },
           ),

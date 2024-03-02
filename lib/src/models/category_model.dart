@@ -3,5 +3,5 @@ class Category{
   final String imagePath;
   final int numberOfItems;
 
-  Category({this.categoryName, this.imagePath, this.numberOfItems});
+  Category({required this.categoryName, required this.imagePath, required this.numberOfItems});
 }

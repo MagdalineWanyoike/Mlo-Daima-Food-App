@@ -16,8 +16,8 @@ class _SignInPageState extends State<SignInPage> {
   GlobalKey<FormState> _formKey = GlobalKey();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  String _password;
-  String _email;
+  String? _password;
+  String? _email;
 
   Widget _buildEmailTextField() {
     return TextFormField(
@@ -28,15 +28,15 @@ class _SignInPageState extends State<SignInPage> {
           fontSize: 18.0,
         ),
       ),
-      onSaved: (String email) {
-        _email = email.trim();
+      onSaved: (email) {
+        _email = email!.trim();
       },
-      validator: (String email) {
+      validator: (email) {
         String errorMessage;
-        if (!email.contains("@")) {
+        if (!email!.contains("@")) {
           errorMessage = "Invalid email";
+          return errorMessage;
         }
-        return errorMessage;
       },
     );
   }
@@ -61,7 +61,7 @@ class _SignInPageState extends State<SignInPage> {
         ),
       ),
       obscureText: _toggleVisibility,
-      onSaved: (String password) {
+      onSaved: (password) {
         _password = password;
       },
     );
@@ -163,11 +163,11 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget _buildSignInButton() {
     return ScopedModelDescendant(
-      builder: (BuildContext sctx, Widget child, MainModel model) {
+      builder: ( sctx, child, MainModel model) {
         return GestureDetector(
           onTap: () {
             showLoadingIndicator(context, "Signing in...");
-            onSubmit(model.authenticate);
+            onSubmit(model.userModel.authenticate);
           },
           child: Button(btnText: "Sign In"),
         );
@@ -176,8 +176,8 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   void onSubmit(Function authenticate) {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
 
       authenticate(_email, _password).then((final response) {
         if (!response['hasError']) {
@@ -185,7 +185,7 @@ class _SignInPageState extends State<SignInPage> {
           Navigator.of(context).pushReplacementNamed("/mainscreen");
         } else {
           Navigator.of(context).pop();
-          _scaffoldKey.currentState.showSnackBar(
+           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: Duration(seconds: 2),
               backgroundColor: Colors.red,

@@ -4,7 +4,7 @@ class SmallButton extends StatelessWidget {
 
   final String btnText;
 
-  SmallButton({this.btnText});
+  SmallButton({required this.btnText});
 
   @override
   Widget build(BuildContext context) {

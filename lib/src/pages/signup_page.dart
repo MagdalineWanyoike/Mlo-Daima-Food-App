@@ -14,9 +14,9 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _toggleVisibility = true;
   // bool _toggleConfirmVisibility = true;
 
-  String _email;
-  String _username;
-  String _password;
+  String? _email;
+  String? _username;
+  String? _password;
   // String _confirmPassword;
 
   GlobalKey<FormState> _formKey = GlobalKey();
@@ -31,19 +31,19 @@ class _SignUpPageState extends State<SignUpPage> {
           fontSize: 18.0,
         ),
       ),
-      onSaved: (String email) {
+      onSaved: (email) {
         _email = email;
       },
-      validator: (String email) {
+      validator: (email) {
         String errorMessage;
-        if (!email.contains("@")) {
+        if (!email!.contains("@")) {
           errorMessage = "Your email is incorrect";
         }
         if (email.isEmpty) {
-          errorMessage = "Your email field is required";
+          errorMessage = "Your email field is required";return errorMessage;
         }
 
-        return errorMessage;
+        
       },
     );
   }
@@ -57,15 +57,15 @@ class _SignUpPageState extends State<SignUpPage> {
           fontSize: 18.0,
         ),
       ),
-      onSaved: (String username) {
-        _username = username.trim();
+      onSaved: ( username) {
+        _username = username!.trim();
       },
-      validator: (String username) {
+      validator: ( username) {
         String errorMessage;
-        if (username.isEmpty) {
-          errorMessage = "Username field is required";
+        if (username!.isEmpty) {
+          errorMessage = "Username field is required";  return errorMessage;
         }
-        return errorMessage;
+      
       },
     );
   }
@@ -90,16 +90,16 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
       obscureText: _toggleVisibility,
-      onSaved: (String password) {
+      onSaved: ( password) {
         _password = password;
       },
-      validator: (String password) {
+      validator: (password) {
         String errorMessage;
 
-        if (password.isEmpty) {
-          errorMessage = "Your password is required";
+        if (password!.isEmpty) {
+          errorMessage = "Your password is required";return errorMessage;
         }
-        return errorMessage;
+        
       },
     );
   }
@@ -109,7 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey.shade100,
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -190,11 +190,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildSignUpButton() {
     return ScopedModelDescendant(
-        builder: (BuildContext sctx, Widget child, MainModel model) {
+        builder: ( sctx, child, MainModel model) {
       return GestureDetector(
         onTap: () {
           showLoadingIndicator(context, "Signing up...");
-          onSubmit(model.authenticate);
+          onSubmit(model.userModel.authenticate);
         },
         child: Container(
           height: 50.0,
@@ -216,8 +216,8 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void onSubmit(Function authenticate) {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
 
       Map<String, dynamic> userInfo = {
         "email": _email,
@@ -236,7 +236,7 @@ class _SignUpPageState extends State<SignUpPage> {
         } else {
           // todo - display the error message in the snackbar
           Navigator.of(context).pop();
-          _scaffoldKey.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: Duration(seconds: 2),
               backgroundColor: Colors.red,

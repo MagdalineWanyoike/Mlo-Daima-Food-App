@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class UserInfo {
   final String id;
   final String userId;
@@ -7,15 +8,16 @@ class UserInfo {
   final String email;
   final String phoneNumber;
   final String userType;
-
   UserInfo({
-    this.id,
-    this.userId,
-    this.username,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.phoneNumber,
-    this.userType,
+    required this.id,
+    required this.userId,
+    required this.username,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.phoneNumber,
+    required this.userType,
   });
+
+
 }
